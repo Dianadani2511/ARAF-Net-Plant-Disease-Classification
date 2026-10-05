@@ -2,29 +2,31 @@
 
 ## Overview
 
-**ARAF-Net** is a deep learning framework designed for automated plant disease classification from leaf images. The proposed approach focuses on learning discriminative visual representations through **attention-refined feature learning and multi-scale feature extraction**.
+**ARAF-Net** is a deep learning architecture for plant disease classification from leaf images. The implementation combines a **ResNet-34 backbone**, **channel attention**, **spatial attention**, and **multi-scale feature fusion** to learn discriminative visual representations.
 
-The repository provides the implementation, experimental notebooks, configuration details, and evaluation resources required to reproduce the experiments reported in the associated research paper.
+The current repository contains the core ARAF-Net model implementation in `models.py`.
 
 ## Research Objectives
 
 The main objectives of this work are to:
 
-* Develop an attention-refined deep learning architecture for plant disease classification.
-* Capture disease-related visual patterns at multiple feature scales.
-* Improve the discriminative representation of plant leaf features.
-* Evaluate the proposed model using standard classification metrics.
-* Provide a reproducible implementation for research and academic use.
+- Develop an attention-refined deep learning architecture for plant disease classification.
+- Enhance feature representation using channel and spatial attention.
+- Capture disease-related patterns at multiple spatial scales.
+- Evaluate the contribution of individual architectural components through ablation experiments.
+- Provide a clear and reproducible implementation for research use.
 
 ## Key Contributions
 
-The major components investigated in ARAF-Net include:
+ARAF-Net integrates the following components:
 
-* **Attention-Refined Feature Learning** for emphasizing informative image regions.
-* **Multi-Scale Feature Learning** for capturing disease characteristics at different spatial levels.
-* **Residual Feature Learning** to support effective deep feature extraction.
-* **End-to-End Plant Disease Classification** using a deep neural network.
-* **Reproducible Experimental Pipeline** covering training, validation, and testing.
+- **ResNet-34 backbone** for deep residual feature extraction.
+- **Channel Attention** using average- and max-pooled channel descriptors.
+- **Spatial Attention** using channel-wise average and maximum descriptors.
+- **Multi-Scale Feature Extraction** using parallel 1×1, 3×3, and 5×5 convolutions.
+- **Multi-Scale Feature Fusion** using a 1×1 convolution.
+- **Global Average Pooling** followed by a fully connected classification layer.
+- **Ablation models** to study the contribution of attention and multi-scale feature fusion.
 
 ## Dataset
 
@@ -32,30 +34,19 @@ The experiments use the **PlantVillage** dataset.
 
 Original dataset:
 
-* PlantVillage Dataset: https://github.com/spMohanty/PlantVillage-Dataset
+- PlantVillage Dataset: https://github.com/spMohanty/PlantVillage-Dataset
 
-The repository will document the exact classes, dataset split, preprocessing procedure, and experimental configuration used in the final study.
+The current experimental setup uses seven plant-disease classes from the PlantVillage data used in the study.
 
-> **Note:** The dataset used for experimentation should be obtained from its original source and used according to its applicable license and terms.
+> **Note:** The dataset should be obtained from its original source and used according to its applicable license and terms.
 
 ## ARAF-Net Architecture
 
-ARAF-Net is built on a ResNet-34 backbone and incorporates channel
-attention, spatial attention, and multi-scale feature fusion for
-plant disease classification.
+ARAF-Net uses ResNet-34 for feature extraction and progressively refines the extracted representation using attention and multi-scale feature fusion.
 
-The architecture consists of the following stages:
+### Architecture Flow
 
-1. ResNet-34 feature extraction
-2. Channel attention refinement
-3. Spatial attention refinement
-4. Multi-scale feature extraction using 1×1, 3×3, and 5×5 convolutions
-5. Multi-scale feature fusion
-6. Global average pooling
-7. Fully connected classification layer
-
-Architecture flow:
-
+```text
 Input Leaf Image
        │
        ▼
@@ -68,179 +59,166 @@ Channel Attention
 Spatial Attention
        │
        ▼
-Multi-Scale Feature Fusion
- ┌─────┼─────┐
- ▼     ▼     ▼
-1×1   3×3   5×5
-Conv  Conv  Conv
- └─────┼─────┘
-       ▼
-  1×1 Fusion
-       │
-       ▼
+Multi-Scale Feature Extraction
+   ┌────┼────┐
+   ▼    ▼    ▼
+  1×1  3×3  5×5
+  Conv Conv Conv
+   └────┼────┘
+        ▼
+   1×1 Fusion
+        │
+        ▼
 Global Average Pooling
-       │
-       ▼
+        │
+        ▼
 Fully Connected Layer
-       │
-       ▼
-Plant Disease Class```
+        │
+        ▼
+Plant Disease Classes
+```
+
+### Attention Modules
+
+**Channel Attention:**  
+Average pooling and max pooling are used to generate channel descriptors. These descriptors are passed through a shared lightweight transformation to produce channel-wise attention weights.
+
+**Spatial Attention:**  
+Channel-wise average and maximum projections are combined and processed using a 7×7 convolution to generate spatial attention weights.
+
+### Multi-Scale Feature Fusion
+
+The refined feature representation is processed through parallel convolutional branches with **1×1, 3×3, and 5×5 kernels**. The resulting features are concatenated and projected through a **1×1 convolution** to obtain the fused representation.
+
+## Ablation Models
+
+The implementation supports the following variants:
+
+| Model | Configuration |
+|---|---|
+| A | ResNet-34 baseline |
+| B | ResNet-34 + Channel Attention |
+| C | ResNet-34 + Spatial Attention |
+| D | ResNet-34 + Channel + Spatial Attention |
+| E | **ARAF-Net:** ResNet-34 + Channel + Spatial Attention + Multi-Scale Feature Fusion |
+
+These variants enable systematic analysis of the contribution of each major component.
 
 ## Repository Structure
+
+The current repository is intentionally kept simple:
 
 ```text
 ARAF-Net-Plant-Disease-Classification/
 │
 ├── README.md
-├── requirements.txt
-├── CITATION.cff
-├── LICENSE
-│
-├── notebooks/
-│   ├── data_preparation.ipynb
-│   ├── training.ipynb
-│   └── evaluation.ipynb
-│
-├── models/
-│   └── araf_net.py
-│
-├── scripts/
-│   ├── train.py
-│   └── evaluate.py
-│
-├── results/
-│   ├── figures/
-│   ├── confusion_matrix/
-│   └── metrics/
-│
-└── checkpoints/
-    └── README.md
+└── models.py
 ```
+
+## Model Configuration
+
+The implementation currently uses:
+
+| Configuration | Value |
+|---|---|
+| Backbone | ResNet-34 |
+| Input image size | 224 × 224 |
+| Image format | RGB |
+| Number of classes | 7 |
+| Channel-attention reduction factor | 16 |
+| Spatial-attention kernel | 7 × 7 |
+| Multi-scale kernels | 1 × 1, 3 × 3, 5 × 5 |
+| Classifier | Global Average Pooling + Linear |
+| Backbone weights | ImageNet weights by default |
 
 ## Requirements
 
-The implementation is based on Python and PyTorch.
+The model implementation is based on **Python, PyTorch, and Torchvision**.
 
-Example environment:
+A typical environment includes:
 
 ```text
 Python 3.x
 PyTorch
 Torchvision
-NumPy
-Pandas
-Scikit-learn
-Matplotlib
-Pillow
-Hugging Face Datasets
 ```
 
-The final `requirements.txt` will contain the exact package versions used for the published experiments.
+Additional packages can be installed as required by the experimental training notebook or data-processing workflow.
 
 ## Installation
 
-Clone the repository after it has been published:
+Clone the repository:
 
 ```bash
 git clone https://github.com/Dianadani2511/ARAF-Net-Plant-Disease-Classification.git
 cd ARAF-Net-Plant-Disease-Classification
 ```
 
-Install the required dependencies:
+## Model Usage
 
-```bash
-pip install -r requirements.txt
+The core model can be imported directly from `models.py`:
+
+```python
+from models import ARAFNet
+
+model = ARAFNet(num_classes=7, pretrained=False)
+print(model)
 ```
 
-## Training
-
-The training pipeline will include:
-
-* Dataset loading
-* Image preprocessing
-* Data splitting
-* Model initialization
-* Model training
-* Validation
-* Model checkpointing
-
-Example:
-
-```bash
-python scripts/train.py
-```
-
-The exact training configuration will be documented with the final experimental setup.
-
-## Evaluation
-
-The trained model can be evaluated using:
-
-```bash
-python scripts/evaluate.py
-```
-
-The evaluation will report standard classification metrics, including:
-
-* Accuracy
-* Precision
-* Recall
-* F1-score
-* Confusion matrix
+Set `pretrained=True` when ImageNet-pretrained ResNet-34 weights are desired and an internet connection is available for downloading the weights.
 
 ## Experimental Results
 
-Final experimental results will be added after the complete experimental configuration and model implementation have been finalized.
+Final experimental results will be reported after the complete experimental configuration and baseline comparisons have been finalized.
 
-| Metric    |       ARAF-Net |
-| --------- | -------------: |
-| Accuracy  | To be reported |
+| Metric | ARAF-Net |
+|---|---:|
+| Accuracy | To be reported |
 | Precision | To be reported |
-| Recall    | To be reported |
-| F1-score  | To be reported |
+| Recall | To be reported |
+| F1-score | To be reported |
 
-Additional comparisons with appropriate baseline models will be included where applicable.
+The repository will be updated with the final verified results and supporting evaluation outputs when they are ready.
 
 ## Reproducibility
 
-To support reproducible research, the repository will provide:
+For reproducible research, the study should document:
 
-* Dataset information
-* Preprocessing details
-* Model implementation
-* Training configuration
-* Evaluation scripts
-* Required software packages
-* Experimental results
-* Random seed information, where applicable
+- Dataset source and selected classes.
+- Dataset split and preprocessing.
+- Model configuration.
+- Training hyperparameters.
+- Baseline and ablation settings.
+- Evaluation metrics.
+- Random seed, where applicable.
 
 ## Research Paper
 
-**Title:**
+**Title:**  
 *ARAF-Net: Attention-Refined Multi-Scale Feature Learning for Plant Disease Classification*
 
-**Author:**
+**Author:**  
 Dr. D. Paulin Diana Dani
 
-**Affiliation:**
-Department of Computer Science and Engineering
-Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology
+**Affiliation:**  
+Department of Computer Science and Engineering  
+Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology  
 Chennai, India
 
 Publication details will be added after the paper is formally published.
 
 ## Citation
 
-A formal citation entry will be provided through `CITATION.cff` once the paper and repository metadata are finalized.
+A formal citation entry will be added when the paper and repository metadata are finalized.
 
 ## License
 
-The appropriate open-source license will be specified before publication of the repository.
+The appropriate license will be specified before final public release of the research code.
 
 ## Contact
 
-**Dr. D. Paulin Diana Dani**
-Assistant Professor
-Department of Computer Science and Engineering
-Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology
+**Dr. D. Paulin Diana Dani**  
+Assistant Professor  
+Department of Computer Science and Engineering  
+Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology  
 Chennai, India
