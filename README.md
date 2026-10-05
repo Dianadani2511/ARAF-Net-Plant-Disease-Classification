@@ -40,37 +40,51 @@ The repository will document the exact classes, dataset split, preprocessing pro
 
 ## ARAF-Net Architecture
 
-The proposed ARAF-Net architecture is designed to combine:
+ARAF-Net is built on a ResNet-34 backbone and incorporates channel
+attention, spatial attention, and multi-scale feature fusion for
+plant disease classification.
 
-1. Deep residual feature extraction
-2. Multi-scale feature representation
-3. Attention-based feature refinement
-4. Feature fusion
-5. Final disease classification
+The architecture consists of the following stages:
 
-An architecture diagram will be added to this repository after the final model architecture is confirmed.
+1. ResNet-34 feature extraction
+2. Channel attention refinement
+3. Spatial attention refinement
+4. Multi-scale feature extraction using 1×1, 3×3, and 5×5 convolutions
+5. Multi-scale feature fusion
+6. Global average pooling
+7. Fully connected classification layer
 
-```text
+Architecture flow:
+
 Input Leaf Image
        │
        ▼
-Feature Extraction
+ResNet-34 Backbone
        │
        ▼
-Multi-Scale Feature Learning
+Channel Attention
        │
        ▼
-Attention Refinement
+Spatial Attention
        │
        ▼
-Feature Fusion
+Multi-Scale Feature Fusion
+ ┌─────┼─────┐
+ ▼     ▼     ▼
+1×1   3×3   5×5
+Conv  Conv  Conv
+ └─────┼─────┘
+       ▼
+  1×1 Fusion
        │
        ▼
-Classification Head
+Global Average Pooling
        │
        ▼
-Plant Disease Class
-```
+Fully Connected Layer
+       │
+       ▼
+Plant Disease Class```
 
 ## Repository Structure
 
