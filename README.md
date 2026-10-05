@@ -1,72 +1,232 @@
 # ARAF-Net: Attention-Refined Multi-Scale Feature Learning for Plant Disease Classification
+
 ## Overview
 
-This repository is being prepared for the research project **ARAF-Net**, a deep learning framework for plant disease classification using attention-refined multi-scale feature learning.
+**ARAF-Net** is a deep learning framework designed for automated plant disease classification from leaf images. The proposed approach focuses on learning discriminative visual representations through **attention-refined feature learning and multi-scale feature extraction**.
 
-The proposed architecture combines a pretrained ResNet-34 backbone, channel attention, spatial attention, and multi-scale feature fusion.
+The repository provides the implementation, experimental notebooks, configuration details, and evaluation resources required to reproduce the experiments reported in the associated research paper.
+
+## Research Objectives
+
+The main objectives of this work are to:
+
+* Develop an attention-refined deep learning architecture for plant disease classification.
+* Capture disease-related visual patterns at multiple feature scales.
+* Improve the discriminative representation of plant leaf features.
+* Evaluate the proposed model using standard classification metrics.
+* Provide a reproducible implementation for research and academic use.
+
+## Key Contributions
+
+The major components investigated in ARAF-Net include:
+
+* **Attention-Refined Feature Learning** for emphasizing informative image regions.
+* **Multi-Scale Feature Learning** for capturing disease characteristics at different spatial levels.
+* **Residual Feature Learning** to support effective deep feature extraction.
+* **End-to-End Plant Disease Classification** using a deep neural network.
+* **Reproducible Experimental Pipeline** covering training, validation, and testing.
 
 ## Dataset
 
-The experiments use a selected subset of the PlantVillage dataset.
+The experiments use the **PlantVillage** dataset.
 
-* **Total images:** 9,213
-* **Number of disease classes:** 7
-* **Training images:** 7,370
-* **Validation images:** 921
-* **Testing images:** 922
-* **Image size used by the models:** 224 × 224 pixels
+Original dataset:
 
-The seven selected classes are:
+* PlantVillage Dataset: https://github.com/spMohanty/PlantVillage-Dataset
 
-1. Corn Common Rust
-2. Corn Northern Leaf Blight
-3. Potato Early Blight
-4. Potato Late Blight
-5. Tomato Bacterial Spot
-6. Tomato Early Blight
-7. Tomato Late Blight
+The repository will document the exact classes, dataset split, preprocessing procedure, and experimental configuration used in the final study.
 
-Dataset source: [PlantVillage Dataset](https://github.com/spMohanty/PlantVillage-Dataset)
+> **Note:** The dataset used for experimentation should be obtained from its original source and used according to its applicable license and terms.
 
-The dataset images are not included in this repository.
+## ARAF-Net Architecture
 
-## Model Architecture
+The proposed ARAF-Net architecture is designed to combine:
 
-ARAF-Net consists of the following components:
+1. Deep residual feature extraction
+2. Multi-scale feature representation
+3. Attention-based feature refinement
+4. Feature fusion
+5. Final disease classification
 
-1. ImageNet-pretrained ResNet-34 backbone
-2. Channel attention module
-3. Spatial attention module
-4. Multi-scale feature fusion using 1 × 1, 3 × 3, and 5 × 5 convolutional branches
-5. Global average pooling
-6. Seven-class classification layer
+An architecture diagram will be added to this repository after the final model architecture is confirmed.
+
+```text
+Input Leaf Image
+       │
+       ▼
+Feature Extraction
+       │
+       ▼
+Multi-Scale Feature Learning
+       │
+       ▼
+Attention Refinement
+       │
+       ▼
+Feature Fusion
+       │
+       ▼
+Classification Head
+       │
+       ▼
+Plant Disease Class
+```
+
+## Repository Structure
+
+```text
+ARAF-Net-Plant-Disease-Classification/
+│
+├── README.md
+├── requirements.txt
+├── CITATION.cff
+├── LICENSE
+│
+├── notebooks/
+│   ├── data_preparation.ipynb
+│   ├── training.ipynb
+│   └── evaluation.ipynb
+│
+├── models/
+│   └── araf_net.py
+│
+├── scripts/
+│   ├── train.py
+│   └── evaluate.py
+│
+├── results/
+│   ├── figures/
+│   ├── confusion_matrix/
+│   └── metrics/
+│
+└── checkpoints/
+    └── README.md
+```
+
+## Requirements
+
+The implementation is based on Python and PyTorch.
+
+Example environment:
+
+```text
+Python 3.x
+PyTorch
+Torchvision
+NumPy
+Pandas
+Scikit-learn
+Matplotlib
+Pillow
+Hugging Face Datasets
+```
+
+The final `requirements.txt` will contain the exact package versions used for the published experiments.
+
+## Installation
+
+Clone the repository after it has been published:
+
+```bash
+git clone https://github.com/Dianadani2511/ARAF-Net-Plant-Disease-Classification.git
+cd ARAF-Net-Plant-Disease-Classification
+```
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Training
+
+The training pipeline will include:
+
+* Dataset loading
+* Image preprocessing
+* Data splitting
+* Model initialization
+* Model training
+* Validation
+* Model checkpointing
+
+Example:
+
+```bash
+python scripts/train.py
+```
+
+The exact training configuration will be documented with the final experimental setup.
+
+## Evaluation
+
+The trained model can be evaluated using:
+
+```bash
+python scripts/evaluate.py
+```
+
+The evaluation will report standard classification metrics, including:
+
+* Accuracy
+* Precision
+* Recall
+* F1-score
+* Confusion matrix
 
 ## Experimental Results
 
-The following test results were obtained in the reported experiments.
+Final experimental results will be added after the complete experimental configuration and model implementation have been finalized.
 
-| Experiment | Model                                     | Test Accuracy |
-| ---------- | ----------------------------------------- | ------------: |
-| A          | ResNet-34 baseline                        |        99.57% |
-| B          | ResNet-34 + Channel Attention             |        99.57% |
-| C          | ResNet-34 + Spatial Attention             |        98.37% |
-| D          | ResNet-34 + Channel and Spatial Attention |        99.35% |
-| E          | Full ARAF-Net with Multi-Scale Fusion     |        99.13% |
+| Metric    |       ARAF-Net |
+| --------- | -------------: |
+| Accuracy  | To be reported |
+| Precision | To be reported |
+| Recall    | To be reported |
+| F1-score  | To be reported |
 
-The results show that the complete ARAF-Net did not outperform the ResNet-34 baseline on this selected dataset. The experiments are intended to examine the contribution of individual architectural components.
+Additional comparisons with appropriate baseline models will be included where applicable.
 
-These results were obtained using a controlled PlantVillage-based dataset and should not be interpreted as evidence of equivalent performance on field-acquired images.
+## Reproducibility
 
-## Implementation Status
+To support reproducible research, the repository will provide:
 
-The repository structure and source files are being prepared. Training, evaluation, and reproduction instructions will be documented after the implementation files have been checked against the experiments.
+* Dataset information
+* Preprocessing details
+* Model implementation
+* Training configuration
+* Evaluation scripts
+* Required software packages
+* Experimental results
+* Random seed information, where applicable
+
+## Research Paper
+
+**Title:**
+*ARAF-Net: Attention-Refined Multi-Scale Feature Learning for Plant Disease Classification*
+
+**Author:**
+Dr. D. Paulin Diana Dani
+
+**Affiliation:**
+Department of Computer Science and Engineering
+Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology
+Chennai, India
+
+Publication details will be added after the paper is formally published.
 
 ## Citation
 
-**Title:** ARAF-Net: Attention-Refined Multi-Scale Feature Learning for Plant Disease Classification
-
-Author and publication details will be added after the final manuscript information is confirmed.
+A formal citation entry will be provided through `CITATION.cff` once the paper and repository metadata are finalized.
 
 ## License
 
-A software license will be selected before the source code is released for reuse.
+The appropriate open-source license will be specified before publication of the repository.
+
+## Contact
+
+**Dr. D. Paulin Diana Dani**
+Assistant Professor
+Department of Computer Science and Engineering
+Vel Tech Rangarajan Dr. Sagunthala R&D Institute of Science and Technology
+Chennai, India
